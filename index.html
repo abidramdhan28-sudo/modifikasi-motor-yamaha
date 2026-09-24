@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAMAHA MOD-LAB - Studio & Katalog Aftermarket Part (VND, KINGU, VRossi, RCB, TDR)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        yamaha: {
+                            blue: '#0020A6',
+                            deep: '#00105C',
+                            light: '#1E40FF',
+                            cyan: '#00F2FE',
+                            gold: '#FFB800',
+                            dark: '#0B0E14',
+                            card: '#131822',
+                            border: '#20293A'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        tech: ['Orbitron', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0B0E14;
+            color: #F1F5F9;
+        }
+        .font-tech {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(19, 24, 34, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(26, 33, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-blue {
+            box-shadow: 0 0 25px rgba(0, 32, 166, 0.4);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0E14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F2FE;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-yamaha-cyan selection:text-black">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-24 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-yamaha-border/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-yamaha-blue via-yamaha-light to-yamaha-cyan flex items-center justify-center text-white font-black font-tech text-2xl shadow-lg shadow-yamaha-blue/40 group-hover:scale-105 transition-transform">
+                    Y
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-tech font-black text-xl tracking-wider text-white">YAMAHA <span class="text-yamaha-cyan">MOD-LAB</span></span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-tech font-bold bg-yamaha-gold/20 text-yamaha-gold border border-yamaha-gold/30">AFTERMARKET</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 tracking-widest uppercase block font-mono">Specialist: VND • KINGU • VROSSI • RCB • TDR</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-yamaha-dark/80 p-1.5 rounded-2xl border border-yamaha-border">
+                <a href="#builder" class="px-4 py-2 text-xs font-semibold rounded-xl text-yamaha-cyan bg-yamaha-blue/20 border border-yamaha-blue/40 flex items-center gap-2">
+                    <i class="fa-solid fa-wrench text-xs"></i> Garasi Builder
+                </a>
+                <a href="#catalog" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-yamaha-cyan hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-store text-xs mr-1"></i> Katalog Part
+                </a>
+                <a href="#presets" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-yamaha-cyan hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs mr-1"></i> Style Presets
+                </a>
+            </nav>
+
+            <!-- Actions & Total Budget Indicator -->
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col items-end px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                    <span class="text-[10px] text-slate-400 uppercase font-mono">ESTIMASI TOTAL PART</span>
+                    <span id="nav-total-budget" class="font-tech font-bold text-sm text-yamaha-gold">Rp 0</span>
+                </div>
+                
+                <button id="btn-student-info" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-graduation-cap text-yamaha-cyan"></i>
+                    <span class="hidden sm:inline">Info Tugas</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner & Brand Logos -->
+    <section class="relative overflow-hidden pt-8 pb-12 bg-gradient-to-b from-yamaha-deep/80 via-yamaha-dark to-yamaha-dark border-b border-yamaha-border/60">
+        <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-20 pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yamaha-blue/20 border border-yamaha-blue/40 text-yamaha-cyan text-xs font-tech font-bold mb-3">
+                        <i class="fa-solid fa-bolt text-yamaha-gold animate-pulse"></i> Y-TUNING DIGITAL STUDIO
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-tech font-black text-white uppercase tracking-tight">
+                        MODIFIKASI <span class="bg-gradient-to-r from-yamaha-cyan via-blue-400 to-yamaha-gold bg-clip-text text-transparent">MOTOR YAMAHA</span>
+                    </h1>
+                    <p class="text-slate-400 text-xs sm:text-sm max-w-xl mt-2 leading-relaxed">
+                        Kustomisasi motor impianmu dengan sparepart aftermarket original terlengkap: <strong class="text-white">VND Racing, KINGU Alloy, VRossi, RCB, TDR Racing, KTC Kytaco,</strong> & <strong class="text-white">Proliner Exhaust</strong>.
+                    </p>
+                </div>
+
+                <!-- Brand Logos Badges -->
+                <div class="flex flex-wrap items-center justify-center gap-2 max-w-md">
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-cyan-400">VND RACING</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-amber-400">KINGU ALLOY</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-blue-400">VROSSI</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-red-500">RCB (RACING BOY)</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-yellow-400">TDR RACING</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-emerald-400">KTC KYTACO</span>
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-tech font-bold text-purple-400">PROLINER</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT: Interactive Garage & Configurator -->
+    <main id="builder" class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 w-full">
+        
+        <!-- Garage Configurator Section -->
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- LEFT COLUMN: Visualizer Canvas & Build Bill (7 Cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Bike Selector Bar -->
+                <div class="glass-panel p-4 rounded-2xl border border-yamaha-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-motorcycle text-yamaha-cyan"></i> Model Motor:
+                    </span>
+                    <select id="select-bike-model" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-yamaha-dark border border-slate-700 text-xs font-bold text-white focus:ring-2 focus:ring-yamaha-cyan focus:outline-none cursor-pointer">
+                        <option value="nmax" selected>All New NMAX 155 Connected</option>
+                        <option value="aerox">Aerox 155 Connected Cyber City</option>
+                        <option value="mxking">MX King 150 Street Racing</option>
+                        <option value="rxking">RX-King 135 Legend Cobra</option>
+                        <option value="r15">YZF-R15 V4 Connected</option>
+                        <option value="mio">Mio Proper Iconic Automatic</option>
+                    </select>
+                </div>
+
+                <!-- Interactive SVG Visualizer Viewport -->
+                <div class="glass-panel p-6 rounded-3xl border border-yamaha-border relative overflow-hidden flex flex-col justify-between min-h-[420px] shadow-2xl">
+                    
+                    <!-- Viewport Top Bar -->
+                    <div class="flex items-center justify-between z-10 border-b border-slate-800 pb-3">
+                        <div>
+                            <span class="text-[10px] font-mono text-yamaha-cyan uppercase tracking-widest">LIVE STUDIO CONFIGURATOR</span>
+                            <h2 id="active-bike-title" class="font-tech text-lg font-bold text-white">All New NMAX 155</h2>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="badge-style-preset" class="px-3 py-1 rounded-full bg-yamaha-blue/30 border border-yamaha-blue/50 text-[11px] font-tech font-bold text-yamaha-cyan">Custom Style</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic SVG Bike Canvas -->
+                    <div class="relative my-6 flex items-center justify-center min-h-[260px] bg-gradient-to-b from-transparent via-slate-900/30 to-slate-900/80 rounded-2xl p-4">
+                        <svg id="bike-svg" class="w-full h-auto max-w-lg transition-all duration-300" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Floor Shadow -->
+                            <ellipse cx="400" cy="395" rx="330" ry="18" fill="#000000" opacity="0.75"/>
+
+                            <!-- Rear Wheel Group -->
+                            <g id="svg-rear-wheel">
+                                <circle cx="190" cy="300" r="80" fill="#0B0E14" stroke="#1E293B" stroke-width="12"/>
+                                <circle id="svg-rear-rim" cx="190" cy="300" r="52" fill="none" stroke="#FFB800" stroke-width="12" stroke-dasharray="20 10"/>
+                                <circle cx="190" cy="300" r="18" fill="#334155"/>
+                            </g>
+
+                            <!-- Front Wheel Group -->
+                            <g id="svg-front-wheel">
+                                <circle cx="610" cy="300" r="80" fill="#0B0E14" stroke="#1E293B" stroke-width="12"/>
+                                <circle id="svg-front-rim" cx="610" cy="300" r="52" fill="none" stroke="#FFB800" stroke-width="12" stroke-dasharray="20 10"/>
+                                <circle cx="610" cy="300" r="18" fill="#334155"/>
+                            </g>
+
+                            <!-- Front Brake Caliper & Disc -->
+                            <g id="svg-front-brake">
+                                <circle cx="610" cy="300" r="42" fill="none" stroke="#94A3B8" stroke-width="4" stroke-dasharray="6 4"/>
+                                <rect id="svg-caliper" x="625" y="260" width="30" height="25" rx="5" fill="#EF4444"/>
+                            </g>
+
+                            <!-- Engine & CVT Box -->
+                            <g id="svg-engine-cvt">
+                                <path d="M 230 280 L 370 270 L 410 330 L 250 330 Z" fill="#1E293B" stroke="#334155" stroke-width="3"/>
+                                <rect x="250" y="295" width="90" height="30" rx="8" fill="#0F172A" stroke="#334155"/>
+                                <text x="260" y="315" fill="#64748B" font-size="10" font-family="Orbitron" font-weight="bold">CVT TDR</text>
+                            </g>
+
+                            <!-- Rear Shock Absorber (DYNAMIC COLOR) -->
+                            <g id="svg-shock-group">
+                                <line x1="220" y1="230" x2="200" y2="300" stroke="#334155" stroke-width="8"/>
+                                <circle id="svg-shock-tank" cx="230" cy="225" r="14" fill="#00F2FE"/>
+                                <path id="svg-shock-spring" d="M 215 240 L 205 290" stroke="#00F2FE" stroke-width="6" stroke-dasharray="6 4"/>
+                            </g>
+
+                            <!-- Main Body Fairing (DYNAMIC SHAPE & COLOR) -->
+                            <path id="svg-main-body" d="M 220 220 C 270 170, 340 150, 440 170 C 510 180, 550 160, 600 200 L 550 260 L 420 230 L 310 260 L 250 265 Z" 
+                                  fill="#0020A6" stroke="#00F2FE" stroke-opacity="0.5" stroke-width="3" class="transition-all duration-300"/>
+
+                            <!-- Front Nose & Windshield -->
+                            <path id="svg-front-nose" d="M 540 190 L 630 200 L 590 235 Z" fill="#00105C"/>
+                            <path d="M 520 150 L 570 120 L 550 160 Z" fill="#00F2FE" opacity="0.6"/>
+
+                            <!-- Seat -->
+                            <path d="M 240 205 Q 300 190 370 195 L 350 225 Q 280 225 240 205 Z" fill="#0F172A" stroke="#334155"/>
+
+                            <!-- Exhaust Pipe (DYNAMIC SHAPE & COLOR) -->
+                            <g id="svg-exhaust-group">
+                                <path id="svg-exhaust-pipe" d="M 330 310 L 230 330 L 150 295" stroke="#64748B" stroke-width="12" stroke-linecap="round"/>
+                                <polygon id="svg-muffler" points="140,270 220,290 210,320 130,300" fill="#334155" stroke="#00F2FE" stroke-width="2"/>
+                            </g>
+
+                            <!-- Front Suspension Forks -->
+                            <line x1="560" y1="180" x2="610" y2="300" stroke="#94A3B8" stroke-width="9"/>
+                            <line x1="570" y1="180" x2="620" y2="300" stroke="#FFB800" stroke-width="4"/>
+                        </svg>
+                    </div>
+
+                    <!-- Bottom Bar Total & Action -->
+                    <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block uppercase font-mono">TOTAL ESTIMASI PART TERPASANG</span>
+                            <span id="builder-total-price" class="font-tech text-2xl font-black text-yamaha-gold">Rp 0</span>
+                        </div>
+                        <button id="btn-export-bill" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-yamaha-blue hover:bg-yamaha-light text-white font-tech font-bold text-xs uppercase shadow-lg shadow-yamaha-blue/30 flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-copy"></i> Salin Rincian Modif
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- 1-Click Mod Presets -->
+                <div id="presets" class="glass-panel p-5 rounded-3xl border border-yamaha-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-tech font-bold text-slate-200 uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-yamaha-gold"></i> Preset Modifikasi 1-Klik:
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-mono">Rekomendasi Style Popular</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <button class="preset-btn p-3 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-yamaha-cyan text-left transition-all group" data-preset="proper">
+                            <span class="text-xs font-bold text-white block group-hover:text-yamaha-cyan">Proper Matic</span>
+                            <span class="text-[10px] text-slate-400 block">Clean & Daily (VND + RCB)</span>
+                        </button>
+                        <button class="preset-btn p-3 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-yamaha-cyan text-left transition-all group" data-preset="thailook">
+                            <span class="text-xs font-bold text-white block group-hover:text-yamaha-cyan">Thailook / Drag</span>
+                            <span class="text-[10px] text-slate-400 block">Velg KINGU + Drag Pipe</span>
+                        </button>
+                        <button class="preset-btn p-3 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-yamaha-cyan text-left transition-all group" data-preset="sunmori">
+                            <span class="text-xs font-bold text-white block group-hover:text-yamaha-cyan">Sunmori Sport</span>
+                            <span class="text-[10px] text-slate-400 block">Proliner + KTC + VRossi</span>
+                        </button>
+                        <button class="preset-btn p-3 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-yamaha-cyan text-left transition-all group" data-preset="restoration">
+                            <span class="text-xs font-bold text-white block group-hover:text-yamaha-cyan">Classic King</span>
+                            <span class="text-[10px] text-slate-400 block">Restorasi TDR & Chrome</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Aftermarket Part Category Swapper (5 Cols) -->
+            <div class="lg:col-span-5 glass-panel p-6 rounded-3xl border border-yamaha-border space-y-5">
+                
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <span class="text-xs font-tech font-bold text-slate-200 uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-yamaha-cyan"></i> Opsi Kustomisasi Part
+                    </span>
+                    <button id="btn-reset-build" class="text-[11px] text-slate-400 hover:text-red-400 font-semibold transition-colors">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Default
+                    </button>
+                </div>
+
+                <!-- Category 1: Velg / Rims -->
+                <div class="space-y-2">
+                    <label class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center justify-between">
+                        <span>1. Velg & Rims Set</span>
+                        <span id="selected-brand-velg" class="text-yamaha-cyan font-mono text-[11px]">VND Racing</span>
+                    </label>
+                    <select id="select-part-velg" class="part-select-control w-full px-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Category 2: Suspensi / Shockbreaker -->
+                <div class="space-y-2">
+                    <label class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center justify-between">
+                        <span>2. Suspensi & Shockbreaker</span>
+                        <span id="selected-brand-shock" class="text-yamaha-cyan font-mono text-[11px]">RCB Series</span>
+                    </label>
+                    <select id="select-part-shock" class="part-select-control w-full px-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Category 3: Sistem Pengereman -->
+                <div class="space-y-2">
+                    <label class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center justify-between">
+                        <span>3. Master Rem & Caliper</span>
+                        <span id="selected-brand-brake" class="text-yamaha-cyan font-mono text-[11px]">RCB S1 Radial</span>
+                    </label>
+                    <select id="select-part-brake" class="part-select-control w-full px-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Category 4: Knalpot / Exhaust -->
+                <div class="space-y-2">
+                    <label class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center justify-between">
+                        <span>4. Knalpot / Exhaust System</span>
+                        <span id="selected-brand-exhaust" class="text-yamaha-cyan font-mono text-[11px]">Proliner TR-1R</span>
+                    </label>
+                    <select id="select-part-exhaust" class="part-select-control w-full px-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Category 5: Kirian CVT & Accessoriers -->
+                <div class="space-y-2">
+                    <label class="text-xs font-tech font-bold text-slate-300 uppercase flex items-center justify-between">
+                        <span>5. Kirian CVT & Aksesori</span>
+                        <span id="selected-brand-cvt" class="text-yamaha-cyan font-mono text-[11px]">TDR Racing</span>
+                    </label>
+                    <select id="select-part-cvt" class="part-select-control w-full px-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Summary Bill Box -->
+                <div class="p-4 rounded-2xl bg-yamaha-dark/90 border border-slate-800 space-y-2 text-xs">
+                    <div class="flex justify-between text-slate-400">
+                        <span>Jumlah Part Modif Terpasang:</span>
+                        <span id="installed-parts-count" class="text-white font-bold">5 Items</span>
+                    </div>
+                    <div class="flex justify-between text-slate-400">
+                        <span>Estimasi Biaya Pasang / Storing:</span>
+                        <span class="text-emerald-400 font-bold">Gratis (Simulasi)</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CATALOG SECTION: Brand Filter & Part Showcase -->
+        <section id="catalog" class="pt-8 space-y-8 border-t border-slate-800">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-tech text-yamaha-cyan uppercase tracking-widest">Sparepart Inventory</span>
+                    <h2 class="text-2xl sm:text-4xl font-tech font-black text-white uppercase mt-1">KATALOG PART AFTERMARKET</h2>
+                </div>
+
+                <!-- Instant Search Bar -->
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                    <input type="text" id="catalog-search" placeholder="Cari nama part, brand, atau tipe motor..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-yamaha-dark border border-slate-700 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-yamaha-cyan focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Brand Filter Pills -->
+            <div class="flex flex-wrap gap-2" id="brand-pills">
+                <button class="brand-pill active-brand px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-blue text-white shadow-lg shadow-yamaha-blue/30" data-brand="all">
+                    Semua Brand
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="VND Racing">
+                    VND Racing
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="KINGU Alloy">
+                    KINGU Alloy
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="VRossi">
+                    VRossi
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="RCB (Racing Boy)">
+                    RCB
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="TDR Racing">
+                    TDR Racing
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="KTC Kytaco">
+                    KTC Kytaco
+                </button>
+                <button class="brand-pill px-4 py-2 rounded-xl text-xs font-tech font-bold uppercase transition-all bg-yamaha-dark border border-slate-700 text-slate-300 hover:border-yamaha-cyan" data-brand="Proliner">
+                    Proliner
+                </button>
+            </div>
+
+            <!-- Catalog Items Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="catalog-grid">
+                <!-- Dynamically rendered via JavaScript -->
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Modal 1: Detail Part Aftermarket -->
+    <div id="modal-part-detail" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-slate-700 shadow-2xl relative space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span id="modal-part-brand" class="px-2.5 py-1 rounded-lg bg-yamaha-blue/30 text-yamaha-cyan font-tech text-[10px] font-bold uppercase">BRAND</span>
+                <button id="close-detail-btn" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="text-center py-4">
+                <div id="modal-part-icon" class="text-6xl text-yamaha-cyan mb-3">
+                    <i class="fa-solid fa-compact-disc"></i>
+                </div>
+                <h3 id="modal-part-name" class="font-tech text-lg font-bold text-white">Nama Part Aftermarket</h3>
+                <p id="modal-part-compat" class="text-xs text-slate-400 mt-1">Kompatibilitas: PNP NMAX / Aerox</p>
+            </div>
+
+            <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">Material / Konstruksi:</span>
+                    <span id="modal-part-material" class="font-semibold text-white">Billet CNC / Forged Alloy</span>
+                </div>
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">Estimasi Harga Retail:</span>
+                    <span id="modal-part-price" class="font-tech font-bold text-yamaha-gold">Rp 0</span>
+                </div>
+            </div>
+
+            <button id="modal-btn-install" class="w-full py-3 rounded-xl bg-yamaha-blue hover:bg-yamaha-light text-white font-tech font-bold text-xs uppercase shadow-lg shadow-yamaha-blue/30 transition-all">
+                PASANG PADA STUDIO MOTOR
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal 2: Informasi Tugas Sekolah / Mahasiswa -->
+    <div id="modal-student-info" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-slate-700 shadow-2xl relative space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-yamaha-blue/20 text-yamaha-cyan flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-tech font-bold text-white text-base sm:text-lg">Informasi Proyek Tugas Web</h3>
+                        <p class="text-xs text-slate-400">Identitas Siswa / Mahasiswa & Parameter Aplikasi</p>
+                    </div>
+                </div>
+                <button id="close-student-btn" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">Nama Siswa / Pengembang:</span>
+                    <span class="font-semibold text-yamaha-cyan">Siswa Developer Yamaha Tech</span>
+                </div>
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">NISN / NIM:</span>
+                    <span class="font-semibold text-white">00812345678 / 22010199</span>
+                </div>
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">Kelas / Jurusan:</span>
+                    <span class="font-semibold text-white">XII Rekayasa Perangkat Lunak (RPL)</span>
+                </div>
+                <div class="p-3 rounded-xl bg-yamaha-dark border border-slate-800 flex justify-between">
+                    <span class="text-slate-400">Sekolah / Kampus:</span>
+                    <span class="font-semibold text-white">SMK Negeri Teknik Indonesia</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-yamaha-dark border border-slate-800 space-y-1.5">
+                    <span class="text-slate-400 block font-semibold text-slate-300">Cakupan Teknologi & Fitur:</span>
+                    <ul class="list-disc list-inside text-slate-300 space-y-1">
+                        <li>Studio Modifikasi Interaktif Vektor SVG Real-time</li>
+                        <li>Katalog Filter Brand Sparepart Aftermarket (VND, KINGU, VRossi, RCB, TDR)</li>
+                        <li>1-Click Preset Style Generator & Exporter Bill (Clipboard)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button id="btn-close-student-modal" class="w-full py-3 rounded-xl bg-yamaha-blue hover:bg-yamaha-light text-white font-tech font-bold text-xs uppercase">
+                Tutup Modal Informasi
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-8 bg-yamaha-dark border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+                <p class="font-tech font-bold text-white text-sm">YAMAHA MOD-LAB Aftermarket Studio</p>
+                <p class="text-xs text-slate-500 mt-0.5">Media simulasi dan katalog modifikasi sparepart motor Yamaha.</p>
+            </div>
+            <p class="text-xs text-slate-600">© 2026 YAMAHA MOD-LAB Interactive. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* --- 1. DATASETS FOR BIKES & AFTERMARKET PARTS --- */
+            const BIKES_DATA = {
+                nmax: { name: 'All New NMAX 155 Connected', type: 'scooter', bodyColor: '#0020A6', noseColor: '#00105C' },
+                aerox: { name: 'Aerox 155 Connected Cyber City', type: 'scooter', bodyColor: '#00F2FE', noseColor: '#0B0E14' },
+                mxking: { name: 'MX King 150 Street Racing', type: 'cub', bodyColor: '#EF4444', noseColor: '#1E293B' },
+                rxking: { name: 'RX-King 135 Legend Cobra', type: 'classic', bodyColor: '#00105C', noseColor: '#FFB800' },
+                r15: { name: 'YZF-R15 V4 Connected', type: 'sport', bodyColor: '#1E40FF', noseColor: '#0020A6' },
+                mio: { name: 'Mio Proper Iconic Automatic', type: 'scooter', bodyColor: '#F59E0B', noseColor: '#334155' }
+            };
+
+            const PARTS_CATALOG = [
+                // VELG / RIMS
+                { id: 'v1', cat: 'velg', brand: 'VND Racing', name: 'Velg VND Roulette Disc Alloy', price: 2450000, compat: 'PNP NMAX / Aerox', material: 'Forged Aluminum CNC', rimColor: '#00F2FE', icon: 'fa-circle-dot' },
+                { id: 'v2', cat: 'velg', brand: 'KINGU Alloy', name: 'KINGU Alloy Drag Rim Slim 1.40', price: 1850000, compat: 'PNP RX-King / MX King / Mio', material: 'High Grade Series 7 Alloy', rimColor: '#FFB800', icon: 'fa-circle-notch' },
+                { id: 'v3', cat: 'velg', brand: 'VRossi', name: 'Velg VRossi Venom Comet / Master', price: 1600000, compat: 'PNP All Yamaha Matic', material: 'Cast Alloy Premium', rimColor: '#94A3B8', icon: 'fa-compact-disc' },
+                { id: 'v4', cat: 'velg', brand: 'RCB (Racing Boy)', name: 'Velg RCB SP522 Gold Matte 5-Spoke', price: 2100000, compat: 'PNP MX King / R15 / RX-King', material: 'Lightweight Magnesium Blend', rimColor: '#FFB800', icon: 'fa-dharmachakra' },
+
+                // SUSPENSI / SHOCK
+                { id: 's1', cat: 'shock', brand: 'VND Racing', name: 'Shock VND AK 111 Mono/Duo Subtank', price: 1750000, compat: 'PNP NMAX / Aerox / RX-King', material: 'Hard Anodized Shaft', shockColor: '#00F2FE', icon: 'fa-arrows-up-down' },
+                { id: 's2', cat: 'shock', brand: 'RCB (Racing Boy)', name: 'Shock Absorber RCB VS / MB-2 Series', price: 2850000, compat: 'PNP All Yamaha Models', material: 'Full Adjustable Rebound & Preload', shockColor: '#EF4444', icon: 'fa-[#EF4444]' },
+                { id: 's3', cat: 'shock', brand: 'KTC Kytaco', name: 'Shock KTC Kytaco Extreme Click Adjust', price: 3200000, compat: 'PNP NMAX / Aerox 155', material: 'CNC Machined Cylinder', shockColor: '#FFB800', icon: 'fa-arrows-up-down' },
+                { id: 's4', cat: 'shock', brand: 'TDR Racing', name: 'Shockbreaker TDR Twin Gas Subtank', price: 2900000, compat: 'PNP Aerox / RX-King / Mio', material: 'Nitrogen Gas Pressure', shockColor: '#3B82F6', icon: 'fa-arrows-up-down' },
+
+                // PENGEREMAN / BRAKE
+                { id: 'b1', cat: 'brake', brand: 'RCB (Racing Boy)', name: 'Master Rem & Caliper RCB S1 Radial 4P', price: 1950000, compat: 'Universal All Yamaha', material: 'Forged Body Billet CNC', brakeColor: '#EF4444', icon: 'fa-hand' },
+                { id: 'b2', cat: 'brake', brand: 'VND Racing', name: 'Caliper Rem VND Billet CNC 4 Piston', price: 1250000, compat: 'PNP NMAX / Aerox / MX King', material: 'Aircraft Grade Aluminum', brakeColor: '#00F2FE', icon: 'fa-stop' },
+                { id: 'b3', cat: 'brake', brand: 'KTC Kytaco', name: 'Master Rem KTC Kytaco 7/8 Radial', price: 1800000, compat: 'Universal Sport & Matic', material: 'CNC Machined Anodized', brakeColor: '#FFB800', icon: 'fa-hand' },
+
+                // KNALPOT / EXHAUST
+                { id: 'e1', cat: 'exhaust', brand: 'Proliner', name: 'Knalpot Proliner TR-1R Short Titanium', price: 1350000, compat: 'PNP NMAX / Aerox / MX King', material: 'High Grade Stainless + Carbon Tip', exhaustColor: '#334155', icon: 'fa-wind' },
+                { id: 'e2', cat: 'exhaust', brand: 'VND Racing', name: 'Knalpot Racing VND Chrome Standard Pas', price: 1100000, compat: 'PNP RX-King / Mio / NMAX', material: 'Full Chrome Coating Stainless', exhaustColor: '#CBD5E1', icon: 'fa-wind' },
+                { id: 'e3', cat: 'exhaust', brand: 'TDR Racing', name: 'Knalpot TDR Racing Carbon Full System', price: 2400000, compat: 'PNP YZF-R15 V4 / MX King', material: 'Real Carbon Fiber Tube', exhaustColor: '#0F172A', icon: 'fa-fire' },
+
+                // KIRIAN CVT & ACCESSORIES
+                { id: 'c1', cat: 'cvt', brand: 'TDR Racing', name: 'Paket Kirian CVT TDR Ceramic Pulley & Roller', price: 1650000, compat: 'PNP NMAX / Aerox / Mio', material: 'Ceramic Coating Roller', icon: 'fa-gear' },
+                { id: 'c2', cat: 'cvt', brand: 'VND Racing', name: 'Aksesori Body Carbon VND Guard Set', price: 850000, compat: 'PNP All Yamaha Matic', material: '3K Carbon Kevlar Composite', icon: 'fa-shield-halved' },
+                { id: 'c3', cat: 'cvt', brand: 'VRossi', name: 'Selang Rem VRossi High Pressure Braided', price: 350000, compat: 'Universal All Models', material: 'Stainless Steel Braided Hose', icon: 'fa-link' }
+            ];
+
+            /* --- 2. APPLICATION STATE --- */
+            let currentBikeKey = 'nmax';
+            let selectedParts = {
+                velg: 'v1',
+                shock: 's1',
+                brake: 'b1',
+                exhaust: 'e1',
+                cvt: 'c1'
+            };
+
+            // DOM Elements
+            const selectBikeModel = document.getElementById('select-bike-model');
+            const activeBikeTitle = document.getElementById('active-bike-title');
+            const svgMainBody = document.getElementById('svg-main-body');
+            const svgFrontNose = document.getElementById('svg-front-nose');
+            const svgFrontRim = document.getElementById('svg-front-rim');
+            const svgRearRim = document.getElementById('svg-rear-rim');
+            const svgShockTank = document.getElementById('svg-shock-tank');
+            const svgShockSpring = document.getElementById('svg-shock-spring');
+            const svgCaliper = document.getElementById('svg-caliper');
+            const svgMuffler = document.getElementById('svg-muffler');
+
+            const selectPartVelg = document.getElementById('select-part-velg');
+            const selectPartShock = document.getElementById('select-part-shock');
+            const selectPartBrake = document.getElementById('select-part-brake');
+            const selectPartExhaust = document.getElementById('select-part-exhaust');
+            const selectPartCvt = document.getElementById('select-part-cvt');
+
+            const navTotalBudget = document.getElementById('nav-total-budget');
+            const builderTotalPrice = document.getElementById('builder-total-price');
+            const installedPartsCount = document.getElementById('installed-parts-count');
+
+            /* --- 3. INITIALIZE SELECT OPTIONS --- */
+            function populateSelectOptions() {
+                const mapCatToSelect = {
+                    velg: selectPartVelg,
+                    shock: selectPartShock,
+                    brake: selectPartBrake,
+                    exhaust: selectPartExhaust,
+                    cvt: selectPartCvt
+                };
+
+                // Clear
+                Object.values(mapCatToSelect).forEach(sel => sel.innerHTML = '');
+
+                PARTS_CATALOG.forEach(part => {
+                    const option = document.createElement('option');
+                    option.value = part.id;
+                    option.textContent = `[${part.brand}] ${part.name} - Rp ${part.price.toLocaleString('id-ID')}`;
+                    
+                    if (mapCatToSelect[part.cat]) {
+                        mapCatToSelect[part.cat].appendChild(option);
+                    }
+                });
+
+                // Set initial values
+                selectPartVelg.value = selectedParts.velg;
+                selectPartShock.value = selectedParts.shock;
+                selectPartBrake.value = selectedParts.brake;
+                selectPartExhaust.value = selectedParts.exhaust;
+                selectPartCvt.value = selectedParts.cvt;
+            }
+
+            /* --- 4. UPDATE VISUALS & CALCULATE BUDGET --- */
+            function updateStudio() {
+                // Update Bike Model Info
+                const bike = BIKES_DATA[currentBikeKey];
+                activeBikeTitle.textContent = bike.name;
+                svgMainBody.setAttribute('fill', bike.bodyColor);
+                svgFrontNose.setAttribute('fill', bike.noseColor);
+
+                // Find selected part objects
+                const velgPart = PARTS_CATALOG.find(p => p.id === selectedParts.velg);
+                const shockPart = PARTS_CATALOG.find(p => p.id === selectedParts.shock);
+                const brakePart = PARTS_CATALOG.find(p => p.id === selectedParts.brake);
+                const exhaustPart = PARTS_CATALOG.find(p => p.id === selectedParts.exhaust);
+                const cvtPart = PARTS_CATALOG.find(p => p.id === selectedParts.cvt);
+
+                // Update Brand Badges in Configurator Controls
+                if (velgPart) document.getElementById('selected-brand-velg').textContent = velgPart.brand;
+                if (shockPart) document.getElementById('selected-brand-shock').textContent = shockPart.brand;
+                if (brakePart) document.getElementById('selected-brand-brake').textContent = brakePart.brand;
+                if (exhaustPart) document.getElementById('selected-brand-exhaust').textContent = exhaustPart.brand;
+                if (cvtPart) document.getElementById('selected-brand-cvt').textContent = cvtPart.brand;
+
+                // Update SVG Colors
+                if (velgPart && velgPart.rimColor) {
+                    svgFrontRim.setAttribute('stroke', velgPart.rimColor);
+                    svgRearRim.setAttribute('stroke', velgPart.rimColor);
+                }
+                if (shockPart && shockPart.shockColor) {
+                    svgShockTank.setAttribute('fill', shockPart.shockColor);
+                    svgShockSpring.setAttribute('stroke', shockPart.shockColor);
+                }
+                if (brakePart && brakePart.brakeColor) {
+                    svgCaliper.setAttribute('fill', brakePart.brakeColor);
+                }
+                if (exhaustPart && exhaustPart.exhaustColor) {
+                    svgMuffler.setAttribute('fill', exhaustPart.exhaustColor);
+                }
+
+                // Calculate Total Cost
+                const total = (velgPart?.price || 0) + (shockPart?.price || 0) + (brakePart?.price || 0) + (exhaustPart?.price || 0) + (cvtPart?.price || 0);
+                const formattedTotal = `Rp ${total.toLocaleString('id-ID')}`;
+
+                navTotalBudget.textContent = formattedTotal;
+                builderTotalPrice.textContent = formattedTotal;
+                installedPartsCount.textContent = '5 Part Terpasang';
+            }
+
+            /* --- 5. EVENT LISTENERS FOR CONFIGURATOR --- */
+            selectBikeModel.addEventListener('change', (e) => {
+                currentBikeKey = e.target.value;
+                updateStudio();
+                showToast(`🛵 Motor diubah ke: ${BIKES_DATA[currentBikeKey].name}`);
+            });
+
+            document.querySelectorAll('.part-select-control').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const cat = e.target.id.replace('select-part-', '');
+                    selectedParts[cat] = e.target.value;
+                    updateStudio();
+                    showToast(`🔧 Sparepart terpasang & ter-update!`);
+                });
+            });
+
+            // Preset Buttons Logic
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const preset = btn.dataset.preset;
+                    if (preset === 'proper') {
+                        currentBikeKey = 'nmax';
+                        selectedParts = { velg: 'v1', shock: 's1', brake: 'b1', exhaust: 'e2', cvt: 'c1' };
+                        document.getElementById('badge-style-preset').textContent = 'Proper Matic';
+                    } else if (preset === 'thailook') {
+                        currentBikeKey = 'mio';
+                        selectedParts = { velg: 'v2', shock: 's3', brake: 'b2', exhaust: 'e1', cvt: 'c2' };
+                        document.getElementById('badge-style-preset').textContent = 'Thailook Drag';
+                    } else if (preset === 'sunmori') {
+                        currentBikeKey = 'aerox';
+                        selectedParts = { velg: 'v3', shock: 's2', brake: 'b3', exhaust: 'e1', cvt: 'c3' };
+                        document.getElementById('badge-style-preset').textContent = 'Sunmori Sport';
+                    } else if (preset === 'restoration') {
+                        currentBikeKey = 'rxking';
+                        selectedParts = { velg: 'v4', shock: 's4', brake: 'b1', exhaust: 'e2', cvt: 'c1' };
+                        document.getElementById('badge-style-preset').textContent = 'Classic RX-King';
+                    }
+
+                    selectBikeModel.value = currentBikeKey;
+                    selectPartVelg.value = selectedParts.velg;
+                    selectPartShock.value = selectedParts.shock;
+                    selectPartBrake.value = selectedParts.brake;
+                    selectPartExhaust.value = selectedParts.exhaust;
+                    selectPartCvt.value = selectedParts.cvt;
+
+                    updateStudio();
+                    showToast(`✨ Preset [${document.getElementById('badge-style-preset').textContent}] Diterapkan!`);
+                });
+            });
+
+            // Reset Button
+            document.getElementById('btn-reset-build').addEventListener('click', () => {
+                selectedParts = { velg: 'v1', shock: 's1', brake: 'b1', exhaust: 'e1', cvt: 'c1' };
+                selectPartVelg.value = selectedParts.velg;
+                selectPartShock.value = selectedParts.shock;
+                selectPartBrake.value = selectedParts.brake;
+                selectPartExhaust.value = selectedParts.exhaust;
+                selectPartCvt.value = selectedParts.cvt;
+                updateStudio();
+                showToast('🔄 Konfigurasi dikembalikan ke default.');
+            });
+
+            // Export Bill to Clipboard
+            document.getElementById('btn-export-bill').addEventListener('click', () => {
+                const bike = BIKES_DATA[currentBikeKey];
+                const velgPart = PARTS_CATALOG.find(p => p.id === selectedParts.velg);
+                const shockPart = PARTS_CATALOG.find(p => p.id === selectedParts.shock);
+                const brakePart = PARTS_CATALOG.find(p => p.id === selectedParts.brake);
+                const exhaustPart = PARTS_CATALOG.find(p => p.id === selectedParts.exhaust);
+                const cvtPart = PARTS_CATALOG.find(p => p.id === selectedParts.cvt);
+
+                const billText = `=== YAMAHA MOD-LAB BUILD SUMMARY ===
+Motor: ${bike.name}
+-------------------------------------
+1. Velg: [${velgPart.brand}] ${velgPart.name} - Rp ${velgPart.price.toLocaleString('id-ID')}
+2. Shock: [${shockPart.brand}] ${shockPart.name} - Rp ${shockPart.price.toLocaleString('id-ID')}
+3. Rem: [${brakePart.brand}] ${brakePart.name} - Rp ${brakePart.price.toLocaleString('id-ID')}
+4. Knalpot: [${exhaustPart.brand}] ${exhaustPart.name} - Rp ${exhaustPart.price.toLocaleString('id-ID')}
+5. CVT/Aksesori: [${cvtPart.brand}] ${cvtPart.name} - Rp ${cvtPart.price.toLocaleString('id-ID')}
+-------------------------------------
+TOTAL BUDGET PART: ${builderTotalPrice.textContent}`;
+
+                // Fallback copy
+                const dummy = document.createElement('textarea');
+                document.body.appendChild(dummy);
+                dummy.value = billText;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+
+                showToast('📋 Rincian modifikasi tersalin ke clipboard!');
+            });
+
+            /* --- 6. CATALOG RENDERING & FILTERING --- */
+            const catalogGrid = document.getElementById('catalog-grid');
+            const catalogSearch = document.getElementById('catalog-search');
+            let activeBrand = 'all';
+
+            function renderCatalog(items) {
+                catalogGrid.innerHTML = '';
+                if (items.length === 0) {
+                    catalogGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">
+                        <i class="fa-solid fa-box-open text-4xl mb-2"></i>
+                        <p class="text-xs font-semibold">Tidak ada sparepart yang sesuai dengan filter pencarian.</p>
+                    </div>`;
+                    return;
+                }
+
+                items.forEach(part => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-yamaha-cyan/50 transition-all group';
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-md bg-yamaha-blue/20 text-yamaha-cyan font-tech text-[10px] uppercase font-bold">${part.brand}</span>
+                                <span class="text-[10px] text-slate-400 font-mono">${part.cat.toUpperCase()}</span>
+                            </div>
+                            <div class="py-6 text-center text-slate-400 group-hover:text-yamaha-cyan transition-colors">
+                                <i class="fa-solid ${part.icon} text-5xl"></i>
+                            </div>
+                            <h3 class="font-tech text-sm font-bold text-white mb-1 group-hover:text-yamaha-cyan transition-colors">${part.name}</h3>
+                            <p class="text-[11px] text-slate-400 mb-4">${part.compat}</p>
+                        </div>
+                        <div class="space-y-3 border-t border-slate-800/80 pt-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-500">Harga Retail</span>
+                                <span class="font-tech text-xs font-bold text-yamaha-gold">Rp ${part.price.toLocaleString('id-ID')}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="btn-detail-part py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold" data-id="${part.id}">
+                                    Detail
+                                </button>
+                                <button class="btn-install-part py-2 rounded-xl bg-yamaha-blue hover:bg-yamaha-light text-white text-[11px] font-bold font-tech" data-id="${part.id}">
+                                    Pasang
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    catalogGrid.appendChild(card);
+                });
+
+                // Attach Event Listeners to rendered catalog items
+                document.querySelectorAll('.btn-detail-part').forEach(btn => {
+                    btn.addEventListener('click', (e) => openPartDetailModal(e.target.dataset.id));
+                });
+                document.querySelectorAll('.btn-install-part').forEach(btn => {
+                    btn.addEventListener('click', (e) => installPartFromCatalog(e.target.dataset.id));
+                });
+            }
+
+            // Filter Brand Pills
+            document.querySelectorAll('.brand-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('.brand-pill').forEach(p => {
+                        p.classList.remove('bg-yamaha-blue', 'text-white', 'shadow-lg');
+                        p.classList.add('bg-yamaha-dark', 'text-slate-300');
+                    });
+                    pill.classList.add('bg-yamaha-blue', 'text-white', 'shadow-lg');
+                    pill.classList.remove('bg-yamaha-dark', 'text-slate-300');
+
+                    activeBrand = pill.dataset.brand;
+                    filterCatalog();
+                });
+            });
+
+            // Search Bar Filter
+            catalogSearch.addEventListener('input', () => {
+                filterCatalog();
+            });
+
+            function filterCatalog() {
+                const query = catalogSearch.value.toLowerCase();
+                const filtered = PARTS_CATALOG.filter(part => {
+                    const matchesBrand = (activeBrand === 'all' || part.brand === activeBrand);
+                    const matchesQuery = part.name.toLowerCase().includes(query) || part.brand.toLowerCase().includes(query) || part.compat.toLowerCase().includes(query);
+                    return matchesBrand && matchesQuery;
+                });
+                renderCatalog(filtered);
+            }
+
+            /* --- 7. MODALS & TOAST NOTIFICATION HANDLERS --- */
+            const modalPartDetail = document.getElementById('modal-part-detail');
+            const closeDetailBtn = document.getElementById('close-detail-btn');
+            const modalBtnInstall = document.getElementById('modal-btn-install');
+            let currentSelectedPartModalId = null;
+
+            function openPartDetailModal(partId) {
+                const part = PARTS_CATALOG.find(p => p.id === partId);
+                if (!part) return;
+
+                currentSelectedPartModalId = partId;
+                document.getElementById('modal-part-brand').textContent = part.brand;
+                document.getElementById('modal-part-name').textContent = part.name;
+                document.getElementById('modal-part-compat').textContent = `Kompatibilitas: ${part.compat}`;
+                document.getElementById('modal-part-material').textContent = part.material;
+                document.getElementById('modal-part-price').textContent = `Rp ${part.price.toLocaleString('id-ID')}`;
+
+                modalPartDetail.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            function closePartDetailModal() {
+                modalPartDetail.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            closeDetailBtn.addEventListener('click', closePartDetailModal);
+            modalBtnInstall.addEventListener('click', () => {
+                if (currentSelectedPartModalId) {
+                    installPartFromCatalog(currentSelectedPartModalId);
+                    closePartDetailModal();
+                }
+            });
+
+            function installPartFromCatalog(partId) {
+                const part = PARTS_CATALOG.find(p => p.id === partId);
+                if (!part) return;
+
+                selectedParts[part.cat] = part.id;
+                
+                // Update select element
+                const mapCatToSelect = {
+                    velg: selectPartVelg,
+                    shock: selectPartShock,
+                    brake: selectPartBrake,
+                    exhaust: selectPartExhaust,
+                    cvt: selectPartCvt
+                };
+                if (mapCatToSelect[part.cat]) {
+                    mapCatToSelect[part.cat].value = part.id;
+                }
+
+                updateStudio();
+                showToast(`✅ [${part.brand}] ${part.name} dipasang di studio!`);
+                window.location.href = '#builder';
+            }
+
+            // Student Task Info Modal
+            const modalStudentInfo = document.getElementById('modal-student-info');
+            const btnStudentInfo = document.getElementById('btn-student-info');
+            const closeStudentBtn = document.getElementById('close-student-btn');
+            const btnCloseStudentModal = document.getElementById('btn-close-student-modal');
+
+            btnStudentInfo.addEventListener('click', () => {
+                modalStudentInfo.classList.remove('opacity-0', 'pointer-events-none');
+            });
+
+            function closeStudentModal() {
+                modalStudentInfo.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            closeStudentBtn.addEventListener('click', closeStudentModal);
+            btnCloseStudentModal.addEventListener('click', closeStudentModal);
+
+            // Toast System Helper
+            function showToast(msg) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'glass-panel px-4 py-3 rounded-2xl shadow-2xl border border-yamaha-cyan/40 text-xs font-semibold text-white flex items-center gap-3 pointer-events-auto transition-all transform translate-x-5';
+                toast.innerHTML = `<span>${msg}</span>`;
+                container.appendChild(toast);
+
+                setTimeout(() => toast.classList.remove('translate-x-5'), 50);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-x-5');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // Initial App Setup
+            populateSelectOptions();
+            updateStudio();
+            renderCatalog(PARTS_CATALOG);
+        });
+    </script>
+</body>
+</html>
